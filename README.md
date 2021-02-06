@@ -5,6 +5,7 @@
 # 編譯執行方式
 ## Linux:
 g++ muti_layer.cpp -o muti_layer.out
+
 ./muti_layer.out case1_pin.in case1_net.in case1_blockage.in
 
 ## Windows:
