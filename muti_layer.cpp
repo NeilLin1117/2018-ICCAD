@@ -175,29 +175,29 @@ public:
 	double ratio2;
 };
 
-struct Cost_Edge {            //�䪺���c�w�q
-	int start, end;      //�䪺����I
-	double length;      //���
-	double wire;        //�u��
+struct Cost_Edge {            
+	int start, end;      
+	double length;  
+	double wire;      
 	double via;
-	bool visit;         //�̤p�ͦ���X��
+	bool visit;         
 };
 
-vector<Cost_Edge> edge_data;//�䶰
+vector<Cost_Edge> edge_data;
 map<int, balance_wire > balance_ratio;
 map<int, balance_wire > ::iterator iter_cost;
 
-struct Cost_Point {           //�I�����c�w�q
-	double x, y, z;         //�y��
+struct Cost_Point {           
+	double x, y, z;        
 	int color;
-	int flag;               //�P�_���S���M��L�I�s
+	int flag;               
 };
-vector<Cost_Point> points_data;	//�I��
+vector<Cost_Point> points_data;	
 
-int cost_father[MAXN];      //�`�Ii�Ҧb�s�q���䪺�N���`�I��father[i],
-							//�����Ϫ���Ƭ�Count
+int cost_father[MAXN];      
+							
 
-double  getPriority(Cost_Point a, Cost_Point b)  //�p��a�I�Mb�I���v��
+double  getPriority(Cost_Point a, Cost_Point b)  
 {
 	double len;
 	//len = sqrt(double((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y)));
@@ -205,55 +205,54 @@ double  getPriority(Cost_Point a, Cost_Point b)  //�p��a�I�Mb�I��
 	return len;
 }
 
-double  get_wire_length(Cost_Point a, Cost_Point b)  //�p��a�I�Mb�I���ڤ�Z��
+double  get_wire_length(Cost_Point a, Cost_Point b)  
 {
 	double len;
 	len = double(abs(a.x - b.x) + abs(a.y - b.y));
 	return len;
 }
 
-double  getVia(Cost_Point a, Cost_Point b)  //�p��a�I�Mb�I���ڤ�Z��
+double  getVia(Cost_Point a, Cost_Point b)  
 {
 	double len;
 	len = double(abs(a.z - b.z));
 	return len;
 }
 
-bool cost_cmp(Cost_Edge a, Cost_Edge b) {      //���a�Mb������j�p
+bool cost_cmp(Cost_Edge a, Cost_Edge b) {      
 	return a.length<b.length;
 }
 
-int cost_find(int x) {              //�p��x�I�Ҧb�s�q�䪺�N���`�I
+int cost_find(int x) {             
 	if (cost_father[x] == x) return x;
 	cost_father[x] = cost_find(cost_father[x]);
 	return cost_father[x];
 }
 
-bool cost_Union(int x, int y)//�X��:�Yx�My���b�P�@�s�q����,�h�N���`�I�Ǹ��p���s�q����֤J�N���`�I�Ǹ��j���s�q����,�ê�^�X�ֺX��
+bool cost_Union(int x, int y)
 {
-	int f1 = cost_find(x);  //�p��x�Ҧb�s�q���䪺�N���`�If1
-	int f2 = cost_find(y);  //�p��y�Ҧb�s�q���䪺�N���`�If2
-	if (f1 == f2) return false;  //�Yx�My�b�P�@�ӳs�q����,�h��^false
-	else if (f1<f2) cost_father[f1] = f2;  //�X�� x�My�Ҧb���s�q����,��^�X�ֺX��
+	int f1 = cost_find(x);  
+	int f2 = cost_find(y);  
+	if (f1 == f2) return false;  
+	else if (f1<f2) cost_father[f1] = f2;  
 	else cost_father[f2] = f1;
 	return true;
 }
 
-void cost_kruskal(int n) { //�ϥ�Kruskal�t��k�p��̤p�ͦ���
+void cost_kruskal(int n) { 
 	int i, j = 0;
 	double sum = 0;
-	for (i = 0; i<n; i++) cost_father[i] = i;   //��l�ɨC�Ӹ`�I�ۦ��@�ӳs�q����
-	sort(edge_data.begin(), edge_data.end(), cost_cmp);      //Count �����������W���ǱƦC
-	for (i = 0; i<edge_data.size() && j<n; i++)            //�C�|�C����,�غcn-1���䪺�̤p�ͦ���
+	for (i = 0; i<n; i++) cost_father[i] = i;   
+	sort(edge_data.begin(), edge_data.end(), cost_cmp);      
+	for (i = 0; i<edge_data.size() && j<n; i++)            
 	{
 		if (cost_Union(edge_data[i].start, edge_data[i].end)) {
-			//�Y��i���䪺��Ӻ��I���b�P�@�s�q����,�h�[�J�̤p�ͦ���
-			//sum += edge_data[i].length;   //����p�J�̤p�ͦ������v�X
-			edge_data[i].visit = 1;       //��i���䬰�̤p�ͦ��𪺾���
+
+			edge_data[i].visit = 1;      
 			j++;
 		}
 	}
-	//return sum;                    //��^�̤p�ͦ������v�M
+	//return sum;                    
 }
 
 void setting(int start, int end) {
@@ -353,7 +352,7 @@ void count_balance() {
 }
 
 void cost_pre_kruskal(int critical) {
-	for (int i = 0; i< points_data.size() - 1; i++)      //�H��Ҭ��`�I�غc������
+	for (int i = 0; i< points_data.size() - 1; i++)      
 		for (int j = i + 1; j < points_data.size(); j++) {
 			if (points_data[i].x == points_data[j].x &&
 				points_data[i].y == points_data[j].y &&
@@ -366,7 +365,7 @@ void cost_pre_kruskal(int critical) {
 		copy_data.push_back(edge_data[i]);
 	}
 
-	///////////////////////////////////�s�[��//////////////////////////////////
+	
 	for (int i = 0; i<copy_data.size() - 1; i++) {
 		int start = copy_data[i].start;
 		int end = copy_data[i].end;
@@ -377,12 +376,12 @@ void cost_pre_kruskal(int critical) {
 			if ((points_data[start].x != points_data[ch_start].x && points_data[start].y != points_data[ch_start].y
 				&& abs(points_data[start].z - points_data[ch_start].z) == 1) && (points_data[start].x != points_data[ch_end].x && points_data[start].y != points_data[ch_end].y
 					&& abs(points_data[start].z - points_data[ch_end].z) == 1)) {
-				//cout << "QQQQQQQQQQQQQQQQQQQQQQQQQQ" << endl;
+			
 				if ((points_data[end].x != points_data[ch_start].x && points_data[end].y != points_data[ch_start].y
 					&& abs(points_data[end].z - points_data[ch_start].z) == 1) && (points_data[end].x != points_data[ch_end].x
 						&& points_data[end].y != points_data[ch_end].y && abs(points_data[end].z - points_data[ch_end].z) == 1))
 				{
-					//cout << "tttttttttttttttttttttttt" << endl;
+					
 					if (points_data[start].x == points_data[end].x && points_data[ch_start].y == points_data[ch_end].y) {
 						if ((points_data[start].x < points_data[ch_start].x && points_data[start].x > points_data[ch_end].x)
 							|| (points_data[start].x > points_data[ch_start].x && points_data[start].x < points_data[ch_end].x))
@@ -438,7 +437,7 @@ void cost_pre_kruskal(int critical) {
 		}
 	}
 
-	///////////////////////////////////�s�[��//////////////////////////////////
+	
 	for (int i = 0; i < copy_data.size(); i++) {
 		int start = copy_data[i].start;
 		int end = copy_data[i].end;
@@ -483,14 +482,7 @@ void cost_pre_kruskal(int critical) {
 		}
 	}
 	if (flag) {
-		//cout << P <<" "<< Count << endl;
-		//cout << "correct!!" << endl<<endl;
-		/*
-		cout << "correct!!" << endl
-		<< "wirelength+via: " << total << endl
-		<< "wirelength: " << wire_length << endl
-		<< "via: " << Via << endl << endl;
-		*/
+	
 		total_wire_length += wire_length;
 		total_via += Via;
 		count_balance();
@@ -501,36 +493,7 @@ void cost_pre_kruskal(int critical) {
 	}
 	else {
 		global_flag = 0;
-		//cout << "Errors!!!" << endl<<endl;
-		/*
-		cout << "same block: " << endl;
-		for (int i = 0; i < edge_data.size(); i++) {
-		int start = edge_data[i].start;
-		int end = edge_data[i].end;
-		if (cost_father[start] == points_data.size() - 1) {
-		cout << "(" << points_data[start].x << "," << points_data[start].y << "," << points_data[start].z << ")"
-		<< " ---> " << "(" << points_data[end].x << "," << points_data[end].y << "," << points_data[end].z << ")" << endl;
-		}
-
-		}
-		cout << endl;
-		cout << "break area: " << endl;
-		for (int i = 0; i < edge_data.size(); i++) {
-		int start = edge_data[i].start;
-		int end = edge_data[i].end;
-		if (cost_father[start] != points_data.size() - 1) {
-		cout << "(" << points_data[start].x << "," << points_data[start].y << "," << points_data[start].z << ")"
-		<< " ---> " << "(" << points_data[end].x << "," << points_data[end].y << "," << points_data[end].z << ")" << endl;
-		}
-		}
-		cout << "break point: " << endl;
-		for (int i = 0; i < points_data.size(); i++) {
-		if (cost_father[i] != points_data.size() - 1) {
-		cout << "(" << points_data[i].x << "," << points_data[i].y << "," << points_data[i].z << ")" << endl;
-		}
-		}
-		cout << endl;
-		*/
+		
 	}
 }
 
